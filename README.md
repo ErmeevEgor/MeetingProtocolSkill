@@ -1,47 +1,176 @@
 # MeetingProtocolSkill
 
-Portable skill for generating meeting minutes from a transcript in **Confluence Storage Format XML/XHTML**.
+Скилл для подготовки протокола встречи по транскрипции с выдачей результата в **Confluence Storage Format XML/XHTML**.
 
-The skill is designed for project meetings where the main source is a transcript. A previous protocol from the same project/stage may be supplied as context. Unsupported fields are left blank instead of being invented.
+Основной сценарий: пользователь прикладывает расшифровку встречи, при необходимости — предыдущий протокол и дополнительные материалы проекта, после чего модель формирует готовый XML-файл, который можно вставить в Confluence через редактор исходного кода.
 
-## Repository contents
+## Что делает скилл
 
-- `portable-skills/meeting-protocol-storage/SKILL.md` — main skill instructions.
-- `portable-skills/meeting-protocol-storage/USER_GUIDE.md` — how to use the skill in a web LLM / ChatGPT.
-- `portable-skills/meeting-protocol-storage/templates/protocol-template.xml` — embedded canonical Confluence Storage Format template.
-- `portable-skills/meeting-protocol-storage/references/` — extraction, source-priority, status and XML rules.
-- `portable-skills/meeting-protocol-storage/examples/` — example transcript and generated protocol.
-- `portable-skills/meeting-protocol-storage/scripts/validate_storage.py` — local XML-fragment validator.
-- `tests/test_storage.py` — minimal regression check for the bundled template and example.
+Скилл:
 
-## Quick use
+- анализирует транскрипцию встречи;
+- выделяет обсуждаемые темы, решения, открытые вопросы, риски и задачи;
+- формирует протокол в единой структуре;
+- использует предыдущий протокол того же проекта/этапа как дополнительный контекст;
+- сохраняет структуру и оформление, совместимые с Confluence Storage Format;
+- **не выдумывает отсутствующие данные**.
 
-Give the model:
+Если клиент, должность участника, срок, ответственный или другое поле нельзя достоверно определить из предоставленных материалов, значение оставляется пустым.
 
-1. the meeting transcript;
-2. optionally the previous protocol **from the same project/stage**;
-3. optionally project/context files that clarify stable facts such as client name, team and stage;
-4. a link to this repository and the instruction to use `portable-skills/meeting-protocol-storage/SKILL.md`.
+## Что нужно передать модели
 
-Expected primary output:
+Минимально нужен только один файл:
 
-`Протокол_<YYYY-MM-DD>_Confluence_Storage_Format.xml`
+1. **Транскрипция встречи** — основной источник фактов.
 
-The output is a Confluence Storage Format **fragment**, intended for insertion into the Confluence source editor. DOCX is not required.
+Дополнительно можно приложить:
 
-## Local validation
+2. **Предыдущий протокол по этому же проекту / этапу** — чтобы сохранить постоянный контекст: название проекта, клиента, роли участников, ранее открытые вопросы и терминологию.
+3. **Файлы проекта или дополнительный контекст** — если в транскрипции не раскрываются устойчивые данные проекта.
+
+Предыдущий протокол нельзя использовать для переноса старых решений как будто они были приняты на новой встрече. Он нужен только для контекста и преемственности.
+
+## Быстрый старт в ChatGPT / веб-LLM
+
+Приложите транскрипцию и при необходимости предыдущий протокол, затем отправьте запрос:
+
+```text
+Используй актуальный skill meeting-protocol-storage из репозитория:
+https://github.com/ErmeevEgor/MeetingProtocolSkill
+
+Сформируй протокол по приложенной транскрипции встречи.
+
+Если приложен предыдущий протокол по этому же проекту или этапу,
+используй его как дополнительный контекст и структурный ориентир.
+
+Не додумывай отсутствующие данные.
+Если поле нельзя достоверно заполнить по предоставленным материалам —
+оставь его пустым.
+
+На выходе верни готовый файл в Confluence Storage Format XML.
+DOCX не нужен.
+```
+
+Если предыдущего протокола нет, достаточно приложить только транскрипцию.
+
+## Что получится на выходе
+
+Основной результат:
+
+```text
+Протокол_<YYYY-MM-DD>_Confluence_Storage_Format.xml
+```
+
+Это **не обычный XML-документ и не HTML-страница**, а фрагмент Confluence Storage Format, предназначенный для вставки в исходный код страницы Confluence.
+
+Типовая структура протокола:
+
+1. Общая информация
+2. Участники
+3. Цель встречи и исходный контекст
+4. Ключевые итоги встречи
+5. Обсуждение по тематическим блокам
+6. Зафиксированное текущее состояние
+7. Принятые решения
+8. Открытые вопросы, риски и ограничения
+9. Задачи и следующие шаги
+
+Разделы без подтверждённой информации не должны искусственно заполняться предположениями.
+
+## Как вставить протокол в Confluence
+
+1. Получите XML-файл от модели.
+2. Откройте нужную страницу Confluence.
+3. Откройте редактор исходного кода / Storage Format — способ зависит от версии Confluence и установленных приложений.
+4. Вставьте содержимое XML-файла.
+5. Сохраните страницу.
+6. Проверьте таблицы, заголовки и макросы после рендеринга.
+
+## Где находится сам скилл
+
+Основной файл:
+
+```text
+portable-skills/meeting-protocol-storage/SKILL.md
+```
+
+Дополнительные файлы:
+
+```text
+portable-skills/meeting-protocol-storage/
+├── SKILL.md
+├── USER_GUIDE.md
+├── release.json
+├── templates/
+│   └── protocol-template.xml
+├── references/
+├── examples/
+└── scripts/
+    └── validate_storage.py
+```
+
+Назначение файлов:
+
+- `SKILL.md` — основные инструкции для модели;
+- `USER_GUIDE.md` — расширенная инструкция по использованию;
+- `templates/protocol-template.xml` — встроенный шаблон протокола;
+- `references/` — правила извлечения фактов, работы с источниками и формирования XML;
+- `examples/` — пример входной транскрипции и готового протокола;
+- `release.json` — версия скилла;
+- `validate_storage.py` — локальная проверка корректности XML-фрагмента.
+
+## Ключевой принцип: не придумывать данные
+
+Приоритет источников для конкретной встречи:
+
+1. текущая транскрипция;
+2. дополнительные материалы, явно относящиеся к этой встрече;
+3. предыдущий протокол того же проекта / этапа — только для устойчивого контекста;
+4. прочие проектные материалы.
+
+Если источники противоречат друг другу, нельзя молча выбирать удобный вариант. Неоднозначность должна быть отражена как открытый вопрос либо спорное поле нужно оставить пустым.
+
+Нельзя автоматически заполнять неизвестные значения словами:
+
+- «Неизвестный»;
+- «Не указан»;
+- «Предположительно»;
+- вымышленной должностью или ФИО.
+
+Для неизвестного значения предпочтительно оставить пустую ячейку.
+
+## Локальная проверка XML
+
+Проверить готовый пример:
 
 ```bash
 python portable-skills/meeting-protocol-storage/scripts/validate_storage.py \
   portable-skills/meeting-protocol-storage/examples/output/Протокол_2026-10-05_Confluence_Storage_Format.xml
 ```
 
-Run tests:
+Запустить тесты:
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-## Version
+## Как обновить скилл в GitHub
 
-Initial release: `0.1.0`.
+После изменения файлов локально:
+
+```powershell
+git status
+git add .
+git commit -m "Update meeting protocol skill"
+git push
+```
+
+Если меняется логика скилла, рекомендуется также обновить версию в:
+
+```text
+portable-skills/meeting-protocol-storage/release.json
+```
+
+## Текущая версия
+
+`0.1.0`
