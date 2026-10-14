@@ -1,0 +1,48 @@
+<h1><span style="color:var(--ds-icon-accent-magenta,#cd519d);">Общая информация</span></h1>
+<table class="wrapped">
+<tbody>
+<tr><td><strong>Название клиента:</strong></td><td><br /></td></tr>
+<tr><td><strong>Тема / проект:</strong></td><td><br /></td></tr>
+<tr><td><strong>Дата, время и место встречи:</strong></td><td><br /></td></tr>
+<tr><td><strong>Источник записи:</strong></td><td><br /></td></tr>
+</tbody></table>
+<h1><span style="color:var(--ds-icon-accent-magenta,#cd519d);">Участники</span></h1>
+<table class="wrapped">
+<tbody>
+<tr><th>Сторона</th><th>Должность</th><th>ФИО</th></tr>
+</tbody></table>
+<h1><span style="color:var(--ds-icon-accent-magenta,#cd519d);">Цель встречи и исходный контекст</span></h1>
+<table class="wrapped">
+<tbody>
+<tr><td><strong>Цель встречи:</strong></td><td><br /></td></tr>
+<tr><td><strong>Исходная ситуация:</strong></td><td><br /></td></tr>
+<tr><td><strong>Основная проблематика:</strong></td><td><br /></td></tr>
+<tr><td><strong>Ожидаемый результат:</strong></td><td><br /></td></tr>
+</tbody></table>
+<h1><span style="color:var(--ds-icon-accent-magenta,#cd519d);">Ключевые итоги встречи</span></h1>
+<ol></ol>
+<h1><span style="color:var(--ds-icon-accent-magenta,#cd519d);">Обсуждение по тематическим блокам</span></h1>
+<table class="wrapped">
+<tbody>
+<tr><th>№</th><th>Тематический блок</th><th>Что обсуждалось</th><th>Итог / вывод</th><th>Статус</th></tr>
+</tbody></table>
+<h1><span style="color:var(--ds-icon-accent-magenta,#cd519d);">Зафиксированное текущее состояние</span></h1>
+<table class="wrapped">
+<tbody>
+<tr><th>Объект / процесс</th><th>Текущее состояние</th></tr>
+</tbody></table>
+<h1><span style="color:var(--ds-icon-accent-magenta,#cd519d);">Принятые решения</span></h1>
+<table class="wrapped">
+<tbody>
+<tr><th>№</th><th>Решение</th><th>Обоснование / комментарий</th></tr>
+</tbody></table>
+<h1><span style="color:var(--ds-icon-accent-magenta,#cd519d);">Открытые вопросы, риски и ограничения</span></h1>
+<table class="wrapped">
+<tbody>
+<tr><th>№</th><th>Тип</th><th>Вопрос / риск / ограничение</th><th>Что требуется для закрытия</th></tr>
+</tbody></table>
+<h1><span style="color:var(--ds-icon-accent-magenta,#cd519d);">Задачи и следующие шаги</span></h1>
+<table class="wrapped">
+<tbody>
+<tr><th>№</th><th>Задача</th><th>Ожидаемый результат</th><th>Срок</th><th>Ответственный</th></tr>
+</tbody></table>

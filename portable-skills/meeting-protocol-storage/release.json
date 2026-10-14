@@ -1,0 +1,16 @@
+{
+  "name": "meeting-protocol-storage",
+  "version": "0.1.0",
+  "status": "release",
+  "primary_scenario": "transcript_to_confluence_storage_protocol",
+  "inputs": [
+    "meeting_transcript",
+    "optional_previous_protocol_same_project_stage",
+    "optional_project_context"
+  ],
+  "outputs": {
+    "chat": [
+      "Протокол_<YYYY-MM-DD>_Confluence_Storage_Format.xml"
+    ]
+  }
+}
