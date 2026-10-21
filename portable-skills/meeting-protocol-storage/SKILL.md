@@ -25,6 +25,35 @@ The bundled template in `templates/protocol-template.xml` is always available an
 
 Return:
 
+`Протокол_<YYYY-MM-DD>_<Краткая_тема_встречи>_Confluence_Storage_Format.xml`
+
+### Filename topic rules
+
+Derive `<Краткая_тема_встречи>` from the **current meeting transcript**, after the factual meeting outline is built.
+
+Rules:
+
+- summarize the dominant subject of the meeting in **2–6 meaningful words**;
+- use business/process terminology that is actually supported by the current transcript;
+- if several topics are material, include only the **2–3 dominant topics**, not every discussed item;
+- prefer specific process names such as `Приемка_и_размещение`, `Отбор_отгрузка_и_инвентаризация`, `Маркировка_и_серийный_учет`;
+- avoid generic labels such as `Рабочая_встреча`, `Обсуждение`, `Статус`, `Совещание` when a more specific topic is supported;
+- do not copy a topic from a previous protocol unless the current transcript independently supports it;
+- do not invent a project stage, process or subject merely to make the filename more descriptive;
+- omit the client/project name unless the user explicitly requests it or it is necessary to distinguish files;
+- replace spaces with `_`;
+- do not use `/`, `\`, `:`, `*`, `?`, `"`, `<`, `>`, `|`;
+- keep the topic reasonably short and readable as a filename;
+- use the meeting date in `YYYY-MM-DD` only when it is supported by the allowed sources or deterministically derivable under the date rules.
+
+Examples:
+
+- `Протокол_2026-09-18_Приемка_и_размещение_Confluence_Storage_Format.xml`
+- `Протокол_2026-09-22_Отбор_отгрузка_и_инвентаризация_Confluence_Storage_Format.xml`
+- `Протокол_2026-10-16_Маркировка_и_серийный_учет_Confluence_Storage_Format.xml`
+
+If the dominant topic cannot be determined reliably, fall back to:
+
 `Протокол_<YYYY-MM-DD>_Confluence_Storage_Format.xml`
 
 Do not create DOCX unless the user separately requests it.
@@ -228,7 +257,8 @@ Before returning the file, verify:
 8. empty/unknown values are blank, not “Не указан/Неизвестный”;
 9. XML special characters are escaped;
 10. the fragment parses when wrapped in a temporary root element;
-11. the final response names the generated XML file and briefly notes any deliberately blank fields that materially affect interpretation.
+11. the output filename reflects the dominant subject of the current meeting, uses only supported wording, and follows the filename topic rules;
+12. the final response names the generated XML file and briefly notes any deliberately blank fields that materially affect interpretation.
 
 ## Execution workflow
 
@@ -236,7 +266,8 @@ Before returning the file, verify:
 2. Read optional project context and previous protocol if supplied.
 3. Apply the previous-protocol gate before reusing any prior fact.
 4. Build a factual meeting outline: metadata, participants, topics, decisions, open items and tasks.
-5. Mark uncertain fields as blank rather than guessing.
-6. Render the outline into the bundled Storage Format structure.
-7. Run the mandatory quality pass and XML validation.
-8. Return the XML file.
+5. Derive the output filename topic from the dominant supported meeting subject using the filename topic rules.
+6. Mark uncertain fields as blank rather than guessing.
+7. Render the outline into the bundled Storage Format structure.
+8. Run the mandatory quality pass and XML validation.
+9. Return the XML file with the generated descriptive filename.
